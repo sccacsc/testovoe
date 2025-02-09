@@ -1,5 +1,7 @@
 #include <program2.h>
 
+//Server::Server() = default;
+
 Server::Server(const std::string port) : server_sockfd(-1),
                                          client_sockfd(-1),
                                          epoll_fd(-1),
@@ -7,7 +9,7 @@ Server::Server(const std::string port) : server_sockfd(-1),
                                          server_address{AF_INET, htons(std::stoi(port)), {INADDR_ANY}, {0}},
                                          client_address(),
                                          number_of_events(0),
-                                         message(0) {
+                                         message("empty") {
 
                                          };
 Server::~Server()
@@ -110,8 +112,9 @@ void Server::init()
                     // if (funciton3 from dynamic library) is true
                     //std::cout << "Client send: << message << std::endl;"
                     //else "Data from client is invalid"
+                    std::cout << "Message: " << message << std::endl;
                     if(lbt::function3(message)) std::cout << "Client send: " << message << std::endl;
-                    else std::cout << "Data from clinet if invalid";
+                    else std::cout << "Data from clinet if invalid" << std::endl;;
                 }
             }
         }
@@ -127,7 +130,7 @@ void Server::close_connection()
 }
 
 int main(int argc, char *argv[])
-{
+{   
     try
     {
         std::unique_ptr<Server> server;

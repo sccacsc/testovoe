@@ -20,6 +20,7 @@ class Server
 {
 
 public:
+    //Server();
     Server(const std::string port);
     ~Server();
     void close_connection();
