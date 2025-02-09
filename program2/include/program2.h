@@ -4,7 +4,6 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <libit.h>
-// #include <fcntl.h>
 
 #include <sys/epoll.h>
 #include <unistd.h>
@@ -20,7 +19,6 @@ class Server
 {
 
 public:
-    //Server();
     Server(const std::string port);
     ~Server();
     void close_connection();

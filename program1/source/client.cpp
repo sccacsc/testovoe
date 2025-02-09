@@ -65,31 +65,3 @@ void Client::close_connection()
     };
     sockfd = -1;
 }
-
-/*int main(int argc, char *argv[])
-{
-    try
-    {
-        std::unique_ptr<Client> client;
-        if (argc != 3)
-        {
-            client = std::make_unique<Client>("127.0.0.1", "8888");
-        }
-        else
-        {
-            client = std::make_unique<Client>(argv[1], argv[2]);
-        }
-        client->init();
-        client->connect_to_server();
-    }
-
-    catch (const std::exception &e)
-    {
-        std::cerr << "ERROR: " << e.what() << std::endl;
-        return -1;
-    }
-
-    std::cout << 123;
-
-    return 0;
-}*/

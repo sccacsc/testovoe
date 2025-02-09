@@ -1,7 +1,5 @@
 #include <program2.h>
 
-//Server::Server() = default;
-
 Server::Server(const std::string port) : server_sockfd(-1),
                                          client_sockfd(-1),
                                          epoll_fd(-1),
@@ -46,7 +44,6 @@ void Server::init()
     {
         throw std::runtime_error("Listen failed: " + std::string(strerror(errno)));
     }
-    // asd
     epoll_fd = epoll_create1(0);
     if (epoll_fd == -1)
     {
@@ -77,7 +74,6 @@ void Server::init()
         {
             if (events[i].data.fd == server_sockfd)
             {
-                // handle new connection
                 client_sockfd = accept4(server_sockfd,
                                         (struct sockaddr *)&client_address,
                                         &client_len,
@@ -99,7 +95,6 @@ void Server::init()
             }
             else if (events[i].events & EPOLLIN)
             {
-                // hande input
                 ssize_t bytes_read = recv(events[i].data.fd, &message, sizeof(message), 0);
                 if (bytes_read <= 0)
                 {
@@ -109,9 +104,6 @@ void Server::init()
                 }
                 else
                 {
-                    // if (funciton3 from dynamic library) is true
-                    //std::cout << "Client send: << message << std::endl;"
-                    //else "Data from client is invalid"
                     std::cout << "Message: " << message << std::endl;
                     if(lbt::function3(message)) std::cout << "Client send: " << message << std::endl;
                     else std::cout << "Data from clinet if invalid" << std::endl;;
@@ -122,7 +114,7 @@ void Server::init()
 }
 
 void Server::close_connection()
-{ // закрытия сокетов
+{
 
     close(server_sockfd);
     close(client_sockfd);

@@ -16,9 +16,6 @@ void Program1::producer()
     while (std::cin >> message)
     {
         std::cout << "Enter string: " << std::endl;
-        // check if valid
-        // send to function1
-        // send_message(returnedFromF1)
         if (is_valid_string(message) == 1)
         {
             std::cout << "String is valid." << std::endl;
