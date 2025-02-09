@@ -1,4 +1,5 @@
 #include <program2.h>
+#include <libit.h>
 
 Server::Server(const std::string port) : server_sockfd(-1),
                                          client_sockfd(-1),
@@ -110,6 +111,8 @@ void Server::init()
                     // if (funciton3 from dynamic library) is true
                     //std::cout << "Client send: << message << std::endl;"
                     //else "Data from client is invalid"
+                    if(lbt::function3(message)) std::cout << "Client send: " << message << std::endl;
+                    else std::cout << "Data from clinet if invalid";
                 }
             }
         }

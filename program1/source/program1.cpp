@@ -1,5 +1,6 @@
 #include <program1.h>
 #include <client.h>
+#include <libit.h>
 
 explicit Program1::Program1(std::unique_ptr<Client> ptr) : client(std::move(ptr)) {};
 
@@ -23,9 +24,12 @@ void Program1::producer()
         if (is_valid_string(message) == 1)
         {
             std::cout << "String is valid." << std::endl;
+            lbt::function1(message);
 
             std::unique_lock<std::mutex> lck(mt);
-            v.push(message); // function1(message)
+
+            v.push(message);
+
             cv.notify_all();
         }
     }
@@ -41,10 +45,12 @@ void Program1::consumer()
         std::unique_lock<std::mutex> lck(mt);
         cv.wait(lck, [this]
                 { return !v.empty(); });
-        consumed_value = v.front(); v.pop();
+        consumed_value = v.front();
+        v.pop();
 
         std::cout << "Thread get: " << consumed_value << std::endl;
-        //client->send_message(funnciton2(consumed_value));
+
+        client->send_message(lbt::function2(consumed_value));
     }
 }
 
