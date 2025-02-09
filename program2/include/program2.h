@@ -1,7 +1,9 @@
-#pragma once
+#ifndef PROG2_H
+#define PROG2_H
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <libit.h>
 // #include <fcntl.h>
 
 #include <sys/epoll.h>
@@ -32,3 +34,5 @@ private:
     std::string message;
     std::vector<int> clientList;
 };
+
+#endif

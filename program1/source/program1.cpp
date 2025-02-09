@@ -1,8 +1,6 @@
 #include <program1.h>
-#include <client.h>
-#include <libit.h>
 
-explicit Program1::Program1(std::unique_ptr<Client> ptr) : client(std::move(ptr)) {};
+Program1::Program1(std::unique_ptr<Client> ptr) : client(std::move(ptr)) {};
 
 inline bool is_valid_string(const std::string &str)
 {
@@ -54,7 +52,7 @@ void Program1::consumer()
     }
 }
 
-int main(int argc, char *argv)
+int main(int argc, char *argv[])
 {
 
     try

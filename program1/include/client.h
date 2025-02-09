@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CLIENT_H
+#define CLIENT_H
 
 #include <arpa/inet.h>
 #include <unistd.h>
@@ -12,7 +13,7 @@ class Client
 {
 
 public:
-    Client(const std::string& ip, const std::string port);
+    Client(const std::string& ip, const std::string& port);
     ~Client();
     void init();
     void send_message(std::string message);
@@ -26,3 +27,5 @@ private:
     int message;
     bool connection_flag;
 };
+
+#endif

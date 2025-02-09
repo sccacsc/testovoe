@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PROG1_H
+#define PROG1_H
 
 #include <thread>
 #include <mutex>
@@ -7,6 +8,8 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <client.h>
+#include <libit.h>
 
 class Program1 {
 public:
@@ -19,3 +22,5 @@ private:
     std::queue<std::string> v;
     std::unique_ptr<Client> client;
 };
+
+#endif
