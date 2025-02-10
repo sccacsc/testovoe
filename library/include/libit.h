@@ -6,11 +6,11 @@
 
 namespace lbt
 {
-    void function1(std::string&);
+    inline void function1(std::string& ptr_str);
 
-    std::string function2(const std::string&);
+    inline std::string function2(const std::string& ptr_str);
 
-    bool function3(const std::string&);
+    inline bool function3(const std::string& ptr_str);
 }
 
 #endif

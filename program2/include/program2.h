@@ -1,12 +1,13 @@
 #ifndef PROG2_H
 #define PROG2_H
 
+#include "libit.h"
+
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <libit.h>
-
 #include <sys/epoll.h>
 #include <unistd.h>
+
 #include <iostream>
 #include <cstring>
 #include <string>

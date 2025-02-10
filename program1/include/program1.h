@@ -1,6 +1,9 @@
 #ifndef PROG1_H
 #define PROG1_H
 
+#include "client.h"
+#include "libit.h"
+
 #include <thread>
 #include <mutex>
 #include <condition_variable>
@@ -8,8 +11,6 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <client.h>
-#include <libit.h>
 
 class Program1 {
 public:
