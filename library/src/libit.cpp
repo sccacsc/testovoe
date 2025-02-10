@@ -21,7 +21,7 @@ void lbt::function1(std::string &ptr_str)
 }
 // Рассчитывает и возвращает общую сумму всех элементов входной строки, которые
 // являются численными значениями
-std::string lbt::function2(const std::string &ptr_str)
+int lbt::function2(const std::string &ptr_str)
 {
     int sum = 0;
 
@@ -29,12 +29,12 @@ std::string lbt::function2(const std::string &ptr_str)
         if(std::isdigit(ch)) sum += ch - '0';
     }
 
-    return std::to_string(sum);
+    return sum;
 }
 // Анализирует, из скольки символов состоит входная строка. Если оно больше 2-ух
 // символов и, если оно кратно 32, то функция возвращает «истина». В противном случае функция
 // возвращает «ложь»
-bool lbt::function3(const std::string &ptr_str)
+bool lbt::function3(const int &sum)
 {
-    return ((ptr_str.size() > 2) && (ptr_str.size() % 32 == 0)) ? true : false;
+    return ((sum > 9) && (sum % 32 == 0)) ? true : false;
 }

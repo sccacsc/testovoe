@@ -7,7 +7,7 @@ Server::Server(const std::string port) : server_sockfd(-1),
                                          server_address{AF_INET, htons(std::stoi(port)), {INADDR_ANY}, {0}},
                                          client_address(),
                                          number_of_events(0),
-                                         message("empty") {
+                                         message(0) {
 
                                          };
 Server::~Server()

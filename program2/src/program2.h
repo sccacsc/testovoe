@@ -31,7 +31,7 @@ private:
     struct sockaddr_in server_address;
     struct sockaddr_in client_address;
     int number_of_events;
-    std::string message;
+    int message;
     std::vector<int> clientList;
 };
 

@@ -31,13 +31,12 @@ void Client::connect_to_server()
     std::cout << "Connected." << std::endl;
 }
 
-void Client::send_message(std::string message)
+void Client::send_message(int message)
 {
     if (send(sockfd, &message, sizeof(message), MSG_NOSIGNAL) == -1)
     {
         if (errno == EPIPE || errno == ECONNRESET)
         {
-            // if need u can save value in buffer here
             reconnect();
         }
         else

@@ -16,7 +16,7 @@ public:
     Client(const std::string& ip, const std::string& port);
     ~Client();
     void init();
-    void send_message(std::string message);
+    void send_message(int message);
     void connect_to_server();
     void reconnect();
     void close_connection();
