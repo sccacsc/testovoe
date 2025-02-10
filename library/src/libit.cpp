@@ -4,7 +4,8 @@
 // латинские буквы «КВ». Функция не возвращает никакого значения.
 void lbt::function1(std::string &ptr_str)
 {
-    std::sort(ptr_str.begin(), ptr_str.begin());
+    std::sort(ptr_str.begin(), ptr_str.end(),
+              [](int a, int b){ return a > b; });
     for (auto it = ptr_str.begin(); it != ptr_str.end();)
     {
         if (*it % 2 == 0)
@@ -25,8 +26,10 @@ int lbt::function2(const std::string &ptr_str)
 {
     int sum = 0;
 
-    for(const auto ch : ptr_str){
-        if(std::isdigit(ch)) sum += ch - '0';
+    for (const auto ch : ptr_str)
+    {
+        if (std::isdigit(ch))
+            sum += ch - '0';
     }
 
     return sum;

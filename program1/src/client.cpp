@@ -46,7 +46,7 @@ void Client::send_message(int message)
         }
     }
     else
-    {
+    {  
         std::cout << "Message sent" << std::endl;
         offlineQ.pop();
     }

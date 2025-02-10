@@ -45,7 +45,8 @@ void Program1::consumer()
         cv.wait(lck, [this]
                 { return !v.empty(); });
 
-        consumed_value = v.front();v.pop();
+        consumed_value = v.front();
+        v.pop();
 
         std::cout << "Thread get: " << consumed_value << std::endl;
 
