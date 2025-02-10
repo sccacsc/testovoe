@@ -22,6 +22,7 @@ private:
     std::condition_variable cv;
     std::queue<std::string> v;
     std::unique_ptr<Client> client;
+    bool ready;
 };
 
 #endif

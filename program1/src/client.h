@@ -8,6 +8,7 @@
 #include <string>
 #include <cstring>
 #include <memory>
+#include <queue>
 
 class Client
 {
@@ -25,7 +26,7 @@ private:
     int sockfd;
     struct sockaddr_in address;
     int message;
-    bool connection_flag;
+    std::queue<int> offlineQ;
 };
 
 #endif

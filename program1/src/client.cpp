@@ -1,12 +1,11 @@
 #include "client.h"
 
-Client::Client(const std::string &ip, const std::string& port) : sockfd(0),
-                                                                address{AF_INET,
-                                                                        htons(std::stoi(port)),
-                                                                        inet_addr(ip.c_str()),
-                                                                        {0}},
-                                                                message(0),
-                                                                connection_flag(true) {};
+Client::Client(const std::string &ip, const std::string &port) : sockfd(0),
+                                                                 address{AF_INET,
+                                                                         htons(std::stoi(port)),
+                                                                         inet_addr(ip.c_str()),
+                                                                         {0}},
+                                                                 message(0) {};
 void Client::init()
 {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -22,18 +21,20 @@ Client::~Client()
 
 void Client::connect_to_server()
 {
-    while (connection_flag)
+    std::cout << "Trying to connect. . ." << std::endl;
+    if (connect(sockfd, (struct sockaddr *)&address, sizeof(address)) == -1)
     {
-        std::cout << "Trying to connect. . ." << std::endl;
-        if (connect(sockfd, (struct sockaddr *)&address, sizeof(address)) != -1)
-            connection_flag = false;
+        std::cout << "Fail. Continue working offline. . ." << std::endl;
     }
-    std::cout << "Connected." << std::endl;
+    else
+        std::cout << "Connected." << std::endl;
 }
 
 void Client::send_message(int message)
 {
-    if (send(sockfd, &message, sizeof(message), MSG_NOSIGNAL) == -1)
+    offlineQ.push(message);
+    // MSG_NOSIGNAL, иначе при потере соединения программа завершиться
+    if (send(sockfd, &(offlineQ.front()), sizeof(offlineQ.front()), MSG_NOSIGNAL) == -1)
     {
         if (errno == EPIPE || errno == ECONNRESET)
         {
@@ -44,13 +45,16 @@ void Client::send_message(int message)
             throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
         }
     }
-    std::cout << "Message sent" << std::endl;   
+    else
+    {
+        std::cout << "Message sent" << std::endl;
+        offlineQ.pop();
+    }
 }
 
 void Client::reconnect()
 {
     std::cout << "Connection lost." << std::endl;
-    connection_flag = true;
     close_connection();
     init();
     connect_to_server();

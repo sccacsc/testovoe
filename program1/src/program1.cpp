@@ -11,14 +11,17 @@ inline bool is_valid_string(const std::string &str)
 
 void Program1::producer()
 {
-
-    std::string message;
-    while (std::cin >> message)
+    while (true)
     {
-        std::cout << "Enter string: " << std::endl;
-        if (is_valid_string(message) == 1)
+        std::string message;
+        std::cout << "Enter string: ";
+        std::cin >> message;
+        std::cout << std::endl;
+
+        if (is_valid_string(message))
         {
             std::cout << "String is valid." << std::endl;
+
             lbt::function1(message);
 
             std::unique_lock<std::mutex> lck(mt);
@@ -27,6 +30,8 @@ void Program1::producer()
 
             cv.notify_all();
         }
+        else
+            std::cout << "String is invalid: size <= 64 or string is empty." << std::endl;
     }
 }
 
@@ -34,14 +39,13 @@ void Program1::consumer()
 {
     while (true)
     {
-
         std::string consumed_value;
 
         std::unique_lock<std::mutex> lck(mt);
         cv.wait(lck, [this]
                 { return !v.empty(); });
-        consumed_value = v.front();
-        v.pop();
+
+        consumed_value = v.front();v.pop();
 
         std::cout << "Thread get: " << consumed_value << std::endl;
 
