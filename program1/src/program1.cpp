@@ -11,9 +11,10 @@ inline bool is_valid_string(const std::string &str)
 
 void Program1::producer()
 {
+            std::string message;
     while (true)
     {
-        std::string message;
+        std::cout << std::endl;
         std::cout << "Enter string: ";
         std::cin >> message;
         std::cout << std::endl;
@@ -29,6 +30,9 @@ void Program1::producer()
             v.push(message);
 
             cv.notify_all();
+
+            cv1.wait(lck, [this]
+                     { return v.empty(); });
         }
         else
             std::cout << "String is invalid: size <= 64 or string is empty." << std::endl;
@@ -51,6 +55,8 @@ void Program1::consumer()
         std::cout << "Thread get: " << consumed_value << std::endl;
 
         client->send_message(lbt::function2(consumed_value));
+
+        cv1.notify_all();
     }
 }
 

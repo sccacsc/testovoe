@@ -12,14 +12,17 @@
 #include <string>
 #include <algorithm>
 
-class Program1 {
+class Program1
+{
 public:
     explicit Program1(std::unique_ptr<Client> ptr);
     void producer();
     void consumer();
+
 private:
     std::mutex mt;
     std::condition_variable cv;
+    std::condition_variable cv1;
     std::queue<std::string> v;
     std::unique_ptr<Client> client;
     bool ready;

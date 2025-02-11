@@ -85,6 +85,7 @@ void Server::init()
                 }
                 // inet_ntop
                 std::cout << "New coonection with: " << client_sockfd << std::endl;
+                std::cout << std::endl;
 
                 event.data.fd = client_sockfd;
                 event.events = EPOLLIN | EPOLLET;
@@ -96,17 +97,21 @@ void Server::init()
             else if (events[i].events & EPOLLIN)
             {
                 ssize_t bytes_read = recv(events[i].data.fd, &message, sizeof(message), 0);
+                send(events[i].data.fd, &message, sizeof(message), MSG_NOSIGNAL);
                 if (bytes_read <= 0)
                 {
                     close(events[i].data.fd);
                     epoll_ctl(epoll_fd, EPOLL_CTL_DEL, events[i].data.fd, nullptr);
                     std::cout << "Client disconnected: " << client_sockfd << std::endl;
+                    std::cout << std::endl;
                 }
                 else
                 {
-                    std::cout << "Message: " << message << std::endl;
-                    if(lbt::function3(message)) std::cout << "Client send: " << message << std::endl;
-                    else std::cout << "Data from clinet if invalid" << std::endl;;
+                    if (lbt::function3(message))
+                        std::cout << "Client send: " << message << std::endl;
+                    else
+                        std::cout << "Data from clinet is invalid" << std::endl;
+                    std::cout << std::endl;
                 }
             }
         }
@@ -122,7 +127,7 @@ void Server::close_connection()
 }
 
 int main(int argc, char *argv[])
-{   
+{
     try
     {
         std::unique_ptr<Server> server;

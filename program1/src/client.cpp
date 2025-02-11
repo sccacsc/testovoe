@@ -33,27 +33,10 @@ void Client::connect_to_server()
 void Client::send_message(int message)
 {
     offlineQ.push(message);
-
-    /*send(sockfd, &(offlineQ.front()), sizeof(offlineQ.front()), MSG_NOSIGNAL);
-    if (recv(sockfd, &(message), sizeof(message), MSG_NOSIGNAL) == -1)
-    {
-        if (errno == EPIPE || errno == ECONNRESET || errno == ENOTCONN)
-        {
-            reconnect();
-        }
-        else
-        {
-            throw std::runtime_error("Send failed: " + std::string(strerror(errno)));
-        }
-    }
-    else
-    {
-        std::cout << "Message sent" << std::endl;
-        offlineQ.pop();
-    }*/
     // MSG_NOSIGNAL, иначе при потере соединения программа завершиться
-    // 
-    if (send(sockfd, &(offlineQ.front()), sizeof(offlineQ.front()), MSG_NOSIGNAL) == -1)
+    // проблема в том, что при отключении сервера один send() уходит никуда. И только при втором
+    // становится понятно, что соединение потеряно
+    /*if (send(sockfd, &(offlineQ.front()), sizeof(offlineQ.front()), MSG_NOSIGNAL) == -1)
     {
         if (errno == EPIPE || errno == ECONNRESET)
         {
@@ -68,6 +51,27 @@ void Client::send_message(int message)
     {
         std::cout << "Message sent" << std::endl;
         offlineQ.pop();
+    }*/
+    // решение, сделать эхо-сервер
+
+    bool flag = true;// чтобы не войти в цикл при reconnect()
+
+    //
+    while (!offlineQ.empty() && flag)
+    {
+        ssize_t bytes_send = send(sockfd, &(offlineQ.front()), sizeof(offlineQ.front()), MSG_NOSIGNAL);
+        ssize_t bytes_recv = recv(sockfd, &(message), sizeof(message), 0);
+
+        if (bytes_recv != -1 && bytes_recv == bytes_send)
+        {
+            offlineQ.pop();
+            std::cout << "Message sent." << std::endl;
+        }
+        else
+        {
+            flag = false;
+            reconnect();
+        }
     }
 }
 
