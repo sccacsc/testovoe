@@ -14,7 +14,7 @@ class Client
 {
 
 public:
-    Client(const std::string& ip, const std::string& port);
+    Client(const std::string &ip, const std::string &port);
     ~Client();
     void init();
     void send_message(int message);
@@ -26,6 +26,7 @@ private:
     int sockfd;
     struct sockaddr_in address;
     int message;
+    //ssize_t bytesSend;
     std::queue<int> offlineQ;
 };
 
