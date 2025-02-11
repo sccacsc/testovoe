@@ -26,7 +26,6 @@ private:
     int sockfd;
     struct sockaddr_in address;
     int message;
-    //ssize_t bytesSend;
     std::queue<int> offlineQ;
 };
 
