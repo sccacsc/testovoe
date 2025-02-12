@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-// #include <memory>
+#include <memory>
 
 Program1::Program1(std::unique_ptr<Client> ptr) : client(std::move(ptr)) {};
 

@@ -1,13 +1,23 @@
 #include "program2.h"
+#include "libit.h"
 
-Server::Server(const std::string port) : server_sockfd(-1),
-                                         client_sockfd(-1),
-                                         epoll_fd(-1),
-                                         client_len(sizeof(client_address)),
-                                         server_address{AF_INET, htons(std::stoi(port)), {INADDR_ANY}, {0}},
+#include <arpa/inet.h>
+// быстрая структура, которая при надобности позволяет обрабатывать большое множество клиентов
+#include <sys/epoll.h>
+
+#include <unistd.h>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <cstring>
+#include <memory>
+
+Server::Server(const std::string port) : server_address{AF_INET,
+                                                        htons(std::stoi(port)),
+                                                        {INADDR_ANY},
+                                                        {0}},
                                          client_address(),
-                                         number_of_events(0),
-                                         message(0) {
+                                         client_len(sizeof(client_address)) {
 
                                          };
 Server::~Server()
@@ -18,19 +28,16 @@ Server::~Server()
 void Server::init()
 {
 
-    server_sockfd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0); // fcntl NON_BLOCK
+    server_sockfd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
     if (server_sockfd == -1)
     {
         throw std::runtime_error("Socket creation failed: " + std::string(strerror(errno)));
     }
 
     int opt = 1;
-    setsockopt(server_sockfd, SOL_SOCKET,
-               SO_REUSEADDR | SO_REUSEPORT, &opt,
-               sizeof(opt));
     if (setsockopt(server_sockfd, SOL_SOCKET,
-                   SO_REUSEADDR | SO_REUSEPORT, &opt,
-                   sizeof(opt)) == -1)
+                   SO_REUSEADDR | SO_REUSEPORT,
+                   &opt, sizeof(opt)) == -1)
     {
         throw std::runtime_error("Set socket option failed: " + std::string(strerror(errno)));
     }
@@ -54,6 +61,8 @@ void Server::init()
     event.data.fd = server_sockfd;
     event.events = EPOLLIN;
 
+    // здесь мы добавляем сокет сервера в epoll_fd,
+    // чтобы ожидать событий на нём
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, server_sockfd, &event))
     {
         throw std::runtime_error("Epoll adding failed: " + std::string(strerror(errno)));
@@ -63,6 +72,7 @@ void Server::init()
 
     struct epoll_event events[MAX_EVENTS];
 
+    // освной цикл работы сервера
     while (true)
     {
         number_of_events = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);
@@ -70,8 +80,10 @@ void Server::init()
         {
             throw std::runtime_error("Epoll wait failed: " + std::string(strerror(errno)));
         }
+        // просмотр событий, который произошло за epoll_wait
         for (int i = 0; i < number_of_events; ++i)
         {
+            // событие подключения
             if (events[i].data.fd == server_sockfd)
             {
                 client_sockfd = accept4(server_sockfd,
@@ -83,10 +95,11 @@ void Server::init()
                     std::cout << "Accept failed, continue waiting. . ." << std::endl;
                     continue;
                 }
-                // inet_ntop
                 std::cout << "New coonection with: " << client_sockfd << std::endl;
                 std::cout << std::endl;
 
+                // здесь мы добавляем сокет клиента в epoll_fd,
+                // чтобы при следующей итерации ожидать событий на нём
                 event.data.fd = client_sockfd;
                 event.events = EPOLLIN | EPOLLET;
                 if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client_sockfd, &event))
@@ -94,6 +107,7 @@ void Server::init()
                     throw std::runtime_error("Epoll adding failed: " + std::string(strerror(errno)));
                 }
             }
+            //обработка событий ввода
             else if (events[i].events & EPOLLIN)
             {
                 ssize_t bytes_read = recv(events[i].data.fd, &message, sizeof(message), 0);
@@ -105,12 +119,15 @@ void Server::init()
                     std::cout << "Client disconnected: " << events[i].data.fd << std::endl;
                     std::cout << std::endl;
                 }
+                //по-хорошему нужно обрабатывать отдельно события отключения,
+                //но в данном контексте у нас всего три события могут произойти:
+                //подключение клиента, получение данных от клиента, отключение клиента
                 else
                 {
                     if (lbt::function3(message))
                         std::cout << "Client send: " << message << std::endl;
                     else
-                        std::cout << "Data from clinet is invalid" << std::endl;
+                        std::cout << "Data from clinet is invalid." << std::endl;
                     std::cout << std::endl;
                 }
             }
@@ -123,7 +140,7 @@ void Server::close_connection()
 
     close(server_sockfd);
     close(client_sockfd);
-    std::cout << "Server closed connection" << std::endl;
+    std::cout << "Server closed connection." << std::endl;
 }
 
 int main(int argc, char *argv[])
@@ -131,6 +148,7 @@ int main(int argc, char *argv[])
     try
     {
         std::unique_ptr<Server> server;
+        
         if (argc != 2)
         {
             server = std::make_unique<Server>("8888");

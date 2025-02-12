@@ -8,8 +8,7 @@
 #include <cstring>
 #include <queue>
 
-Client::Client(const std::string &ip, const std::string &port) : sockfd(0),
-                                                                 address{AF_INET,
+Client::Client(const std::string &ip, const std::string &port) : address{AF_INET,
                                                                          htons(std::stoi(port)),
                                                                          inet_addr(ip.c_str()),
                                                                          {0}} {};
@@ -62,7 +61,7 @@ void Client::send_message(const int &message)
     // решение, сделать эхо-сервер
 
     bool flag = true; // чтобы не войти в цикл при reconnect()
-    int temp = 0; //для recv
+    int temp = 0;     // для recv
 
     while (!offlineQ.empty() && flag)
     {

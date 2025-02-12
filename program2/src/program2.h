@@ -1,18 +1,9 @@
 #ifndef PROG2_H
 #define PROG2_H
 
-#include "libit.h"
-
-#include <sys/socket.h>
 #include <arpa/inet.h>
-#include <sys/epoll.h>
-#include <unistd.h>
-
-#include <iostream>
-#include <cstring>
 #include <string>
 #include <vector>
-#include <memory>
 
 #define MAX_EVENTS 1024
 
@@ -26,13 +17,13 @@ public:
     void init();
 
 private:
-    int server_sockfd, client_sockfd, epoll_fd;
+    sockaddr_in server_address;
+    sockaddr_in client_address;
     socklen_t client_len;
-    struct sockaddr_in server_address;
-    struct sockaddr_in client_address;
-    int number_of_events;
-    int message;
     std::vector<int> clientList;
+    int server_sockfd, client_sockfd, 
+    epoll_fd, number_of_events,
+    message;
 };
 
 #endif
