@@ -102,7 +102,7 @@ void Server::init()
                 {
                     close(events[i].data.fd);
                     epoll_ctl(epoll_fd, EPOLL_CTL_DEL, events[i].data.fd, nullptr);
-                    std::cout << "Client disconnected: " << client_sockfd << std::endl;
+                    std::cout << "Client disconnected: " << events[i].data.fd << std::endl;
                     std::cout << std::endl;
                 }
                 else

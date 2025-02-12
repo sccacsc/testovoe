@@ -35,7 +35,7 @@ void Program1::producer()
                      { return v.empty(); });
         }
         else
-            std::cout << "String is invalid: size <= 64 or string is empty." << std::endl;
+            std::cout << "String is invalid.\nOnly digits, size <= 64, not empty." << std::endl;
     }
 }
 

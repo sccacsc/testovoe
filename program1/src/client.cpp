@@ -1,11 +1,19 @@
 #include "client.h"
 
+#include <arpa/inet.h>
+#include <unistd.h>
+
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <memory>
+#include <queue>
+
 Client::Client(const std::string &ip, const std::string &port) : sockfd(0),
                                                                  address{AF_INET,
                                                                          htons(std::stoi(port)),
                                                                          inet_addr(ip.c_str()),
-                                                                         {0}},
-                                                                 message(0) {};
+                                                                         {0}} {};
 void Client::init()
 {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -30,7 +38,7 @@ void Client::connect_to_server()
         std::cout << "Connected." << std::endl;
 }
 
-void Client::send_message(int message)
+void Client::send_message(const int &message)
 {
     offlineQ.push(message);
     // MSG_NOSIGNAL, иначе при потере соединения программа завершиться
@@ -54,13 +62,13 @@ void Client::send_message(int message)
     }*/
     // решение, сделать эхо-сервер
 
-    bool flag = true;// чтобы не войти в цикл при reconnect()
+    bool flag = true; // чтобы не войти в цикл при reconnect()
+    int temp = 0; //для recv
 
-    //
     while (!offlineQ.empty() && flag)
     {
         ssize_t bytes_send = send(sockfd, &(offlineQ.front()), sizeof(offlineQ.front()), MSG_NOSIGNAL);
-        ssize_t bytes_recv = recv(sockfd, &(message), sizeof(message), 0);
+        ssize_t bytes_recv = recv(sockfd, &(temp), sizeof(temp), 0);
 
         if (bytes_recv != -1 && bytes_recv == bytes_send)
         {
@@ -89,5 +97,4 @@ void Client::close_connection()
     {
         throw std::runtime_error("Socket closing failed: " + std::string(strerror(errno)));
     };
-    sockfd = -1;
 }
