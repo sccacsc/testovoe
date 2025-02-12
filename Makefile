@@ -4,7 +4,6 @@ LDFLAGS = -shared
 
 # Директории
 BUILD_DIR = build
-BIN_DIR = bin
 
 LIB_DIR = library
 LIB_SRC = $(LIB_DIR)/src
