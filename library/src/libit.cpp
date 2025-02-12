@@ -24,9 +24,9 @@ void lbt::function1(std::string &ptr_str)
 }
 // Рассчитывает и возвращает общую сумму всех элементов входной строки, которые
 // являются численными значениями
-int lbt::function2(const std::string &ptr_str) //unsigned int
+unsigned int lbt::function2(const std::string &ptr_str)
 {
-    int sum = 0;
+    unsigned int sum = 0;
 
     for (const auto ch : ptr_str)
     {

@@ -7,7 +7,7 @@ namespace lbt
 {
     void function1(std::string &ptr_str);
 
-    int function2(const std::string &ptr_str);
+    unsigned int function2(const std::string &ptr_str);
 
     bool function3(const int &sum);
 }

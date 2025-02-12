@@ -22,8 +22,8 @@ private:
     socklen_t client_len;
     std::vector<int> clientList;
     int server_sockfd, client_sockfd, 
-    epoll_fd, number_of_events,
-    message;
+    epoll_fd, number_of_events;
+    unsigned int message;
 };
 
 #endif
