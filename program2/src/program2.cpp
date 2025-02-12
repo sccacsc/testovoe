@@ -7,7 +7,6 @@
 
 #include <unistd.h>
 #include <string>
-#include <vector>
 #include <iostream>
 #include <cstring>
 #include <memory>
@@ -148,7 +147,7 @@ int main(int argc, char *argv[])
     try
     {
         std::unique_ptr<Server> server;
-        
+
         if (argc != 2)
         {
             server = std::make_unique<Server>("8888");
