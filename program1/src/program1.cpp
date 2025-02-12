@@ -1,6 +1,18 @@
 #include "program1.h"
 
+#include "libit.h"
+#include <thread>
+// #include <mutex>
+#include <condition_variable>
+#include <queue>
+#include <iostream>
+#include <string>
+#include <algorithm>
+// #include <memory>
+
 Program1::Program1(std::unique_ptr<Client> ptr) : client(std::move(ptr)) {};
+
+Program1::~Program1() = default;
 
 inline bool is_valid_string(const std::string &str)
 {
@@ -11,28 +23,31 @@ inline bool is_valid_string(const std::string &str)
 
 void Program1::producer()
 {
-            std::string message;
+    std::string message;
     while (true)
     {
-        std::cout << std::endl;
-        std::cout << "Enter string: ";
+        //имеет смысл при cv1
+        //std::cout << std::endl;
+        //std::cout << "Enter string: "; 
         std::cin >> message;
+
         std::cout << std::endl;
 
         if (is_valid_string(message))
         {
-            std::cout << "String is valid." << std::endl;
+            std::cout << "String " << message << " is valid." << std::endl;
 
             lbt::function1(message);
 
             std::unique_lock<std::mutex> lck(mt);
 
-            v.push(message);
+            buffer.push(message);
 
             cv.notify_all();
 
-            cv1.wait(lck, [this]
-                     { return v.empty(); });
+            //нужно не ждать по тз
+            //cv1.wait(lck, [this]
+              //       { return buffer.empty(); });
         }
         else
             std::cout << "String is invalid.\nOnly digits, size <= 64, not empty." << std::endl;
@@ -43,20 +58,18 @@ void Program1::consumer()
 {
     while (true)
     {
-        std::string consumed_value;
-
         std::unique_lock<std::mutex> lck(mt);
         cv.wait(lck, [this]
-                { return !v.empty(); });
+                { return !buffer.empty(); });
 
-        consumed_value = v.front();
-        v.pop();
+        const std::string consumed_value = buffer.front();
+        buffer.pop();
 
         std::cout << "Thread get: " << consumed_value << std::endl;
 
         client->send_message(lbt::function2(consumed_value));
 
-        cv1.notify_all();
+        //cv1.notify_all();
     }
 }
 

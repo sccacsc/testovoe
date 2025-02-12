@@ -2,7 +2,6 @@
 #define LIBIT_H
 
 #include <string>
-#include <algorithm>
 
 namespace lbt
 {

@@ -3,7 +3,6 @@
 
 #include <string>
 #include <queue>
-#include <memory>
 #include <arpa/inet.h>
 
 class Client

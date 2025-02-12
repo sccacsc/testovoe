@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-#include <memory>
 #include <queue>
 
 Client::Client(const std::string &ip, const std::string &port) : sockfd(0),

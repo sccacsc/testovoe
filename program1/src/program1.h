@@ -2,28 +2,24 @@
 #define PROG1_H
 
 #include "client.h"
-#include "libit.h"
 
-#include <thread>
-#include <mutex>
+//#include <mutex>
 #include <condition_variable>
 #include <queue>
-#include <iostream>
-#include <string>
-#include <algorithm>
 
 class Program1
 {
 public:
-    explicit Program1(std::unique_ptr<Client> ptr);
+    Program1(std::unique_ptr<Client> ptr);
+    ~Program1();
     void producer();
     void consumer();
 
 private:
     std::mutex mt;
     std::condition_variable cv;
-    std::condition_variable cv1;
-    std::queue<std::string> v;
+    //std::condition_variable cv1;
+    std::queue<std::string> buffer;
     std::unique_ptr<Client> client;
     bool ready;
 };
