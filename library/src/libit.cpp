@@ -42,5 +42,5 @@ unsigned int lbt::function2(const std::string &ptr_str)
 // возвращает «ложь»
 bool lbt::function3(const int &sum)
 {
-    return ((sum > 9) && (sum % 32 == 0)) ? true : false;
+    return ((sum > 99) && (sum % 32 == 0)) ? true : false;
 }

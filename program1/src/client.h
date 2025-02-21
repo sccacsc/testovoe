@@ -19,6 +19,7 @@ public:
 
 private:
     int sockfd;
+    bool flag;
     const sockaddr_in address;
     std::queue<unsigned int> offlineQ;
 };

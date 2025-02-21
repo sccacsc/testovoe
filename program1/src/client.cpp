@@ -33,7 +33,9 @@ void Client::connect_to_server()
         std::cout << "Fail. Continue working offline. . ." << std::endl;
     }
     else
-        std::cout << "Connected." << std::endl;
+        {std::cout << "Connected." << std::endl;
+            flag = true;
+        }
 }
 
 void Client::send_message(const int &message)
@@ -60,7 +62,7 @@ void Client::send_message(const int &message)
     }*/
     // решение, сделать эхо-сервер
 
-    bool flag = true; // чтобы не войти в цикл при reconnect()
+    flag = true; // чтобы не войти в цикл при reconnect()
     int temp = 0;     // для recv
 
     while (!offlineQ.empty() && flag)

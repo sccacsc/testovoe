@@ -139,6 +139,7 @@ void Server::close_connection()
 
     close(server_sockfd);
     close(client_sockfd);
+    close(epoll_fd);
     std::cout << "Server closed connection." << std::endl;
 }
 
